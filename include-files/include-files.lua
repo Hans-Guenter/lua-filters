@@ -88,7 +88,21 @@ function transclude (cb)
   local blocks = List:new()
   for line in cb.text:gmatch('[^\n]+') do
     if line:sub(1,2) ~= '//' then
+    	    -- print ("state1:", PANDOC_STATE.input_files[1])
+    	    -- print ("state2:", PANDOC_STATE.input_files[2])
+    	    -- print ("line:", line)
       local fh = io.open(line)
+      -- Code HGS 09.01.2025 obtain absolute path by using input_files paths and test
+      if not fh then
+      	local line2 =  PANDOC_STATE.input_files[1] .. '\\..\\' .. line 
+        fh = io.open(line2)
+        if not fh then
+		line2 =  PANDOC_STATE.input_files[2] .. '\\..\\' .. line 
+		fh = io.open(line2)
+        end
+        -- print ("line2:", line2)
+      end
+      -- End of 
       if not fh then
         warn("Cannot open file " .. line .. " | Skipping includes")
       else
